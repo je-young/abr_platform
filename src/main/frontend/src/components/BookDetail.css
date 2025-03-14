@@ -1,0 +1,53 @@
+/* src/components/BookDetail.css */
+
+.book-detail-container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.book-detail-container h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.book-detail-container .author {
+  font-style: italic;
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.book-detail-container .description {
+  line-height: 1.6;
+}
+
+.review-list-container {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.review-list-container h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.review-list-container .review-list {
+  list-style: none;
+  padding: 0;
+}
+
+.review-list-container .review-item {
+  border-bottom: 1px dashed #ddd;
+  padding: 10px 0;
+}
+
+.review-list-container .review-item:last-child {
+  border-bottom: none; /* 마지막 리뷰 아이템 하단 테두리 제거 */
+}
+
+.review-list-container .review-item .content {
+  margin: 0;
+}

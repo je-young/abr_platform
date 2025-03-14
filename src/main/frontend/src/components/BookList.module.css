@@ -1,0 +1,39 @@
+/* BookList.module.css */
+
+.bookList {
+  /* CSS 클래스 선택자: .bookList */
+  list-style: none;
+  padding: 0;
+}
+
+.bookItem {
+  /* CSS 클래스 선택자: .bookItem */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.bookItem:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.bookItem h3 {
+  /* CSS 클래스 선택자: .bookItem 클래스 아래 h3 요소 */
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.bookItem .author {
+  /* CSS 클래스 선택자: .bookItem 클래스 아래 .author 클래스가 적용된 요소 */
+  font-style: italic;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.bookItem .description {
+  /* CSS 클래스 선택자: .bookItem 클래스 아래 .description 클래스가 적용된 요소 */
+  color: #555;
+}

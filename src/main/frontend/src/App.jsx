@@ -1,35 +1,20 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom'; // React Router 관련 컴포넌트 import
+import BookList from './components/BookList'; // BookList 컴포넌트 import
+import BookDetail from './components/BookDetail'; // BookDetail 컴포넌트 import
+import BookForm from './components/BookForm'; // BookForm 컴포넌트 import
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<BookList />} />
+        <Route path="/book/:book_id" element={<BookDetail />} />
+        <Route path="/book/add" element={<BookForm />} />
+        <Route path="/book/:book_id/edit" element={<BookForm />} />
+      </Routes>
+    </BrowserRouter>
+  ); // return end
+} // App end
 
-export default App
+export default App;
