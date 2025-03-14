@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom'; // useParams 훅 import  <-- import 추가
+import { useNavigate, useParams } from 'react-router-dom';
 
 // 책 추천 등록 및 수정 폼 컴포넌트
 function BookForm() {
@@ -58,6 +58,7 @@ function BookForm() {
   };
 
   // 폼 제출 이벤트 핸들러
+  // 변경 1: handleSubmit 함수 수정
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
@@ -73,6 +74,11 @@ function BookForm() {
         );
         console.log('책 추천 수정 성공 - 응답:', response.data);
         setMessage('책 추천이 성공적으로 수정되었습니다.');
+
+        // 변경 2: 수정 성공 후 상세 페이지로 이동 (상태 데이터와 함께)
+        navigate(`/book/${book_id}`, {
+          state: { bookData: response.data },
+        });
       } else {
         // 등록시 상세 디버깅 추가
         console.log('등록 요청 데이터:', formData);
@@ -81,35 +87,30 @@ function BookForm() {
         console.log('책 등록 API 응답 (전체):', response);
         console.log('책 등록 API 상태 코드:', response.status);
         console.log('책 등록 API 응답 데이터:', response.data);
-        console.log('응답 데이터 타입:', typeof response.data);
-        console.log('책 추천 등록 성공:', response.data);
-        setMessage('책 추천이 성공적으로 등록되었습니다.');
 
+        // 응답 데이터 디버깅
         if (typeof response.data === 'object') {
           console.log('응답 객체 키들:', Object.keys(response.data));
           console.log('book_id 속성 값:', response.data.book_id);
         }
-      }
 
-      // 여기서 응답 데이터에서 book_id를 추출하는 방식을 다양하게 시도
-      let redirectId;
+        setMessage('책 추천이 성공적으로 등록되었습니다.');
 
-      if (book_id) {
-        // 수정 시에는 URL에서 가져온 book_id 사용
-        redirectId = book_id;
-      } else if (response.data && typeof response.data === 'object') {
-        // 등록 시에는 응답에서 book_id 추출 시도
-        if (response.data.book_id) {
-          redirectId = response.data.book_id;
-        } else if (response.data.id) {
-          redirectId = response.data.id; // 다른 가능한 필드명
+        // 변경 3: 등록 성공 후 상세 페이지로 이동 (상태 데이터와 함께)
+        if (response.data && response.data.book_id) {
+          // 해결방안 4: 라우터 state로 데이터 전달
+          navigate(`/book/${response.data.book_id}`, {
+            state: {
+              bookData: response.data,
+              isNewBook: true, // 새로 등록된 책임을 표시
+            },
+          });
+        } else {
+          console.error('응답에 book_id가 없습니다:', response.data);
+          setIsError(true);
+          setMessage('책 상세 페이지로 이동할 수 없습니다.');
         }
       }
-
-      console.log('이동할 book_id:', redirectId);
-
-      // 성공 후 상세 페이지로 이동 (생성 또는 수정된 책의 book_id 사용)
-      navigate(`/book/${response.data.book_id}`);
     } catch (error) {
       console.error('책 추천 등록/수정 실패:', error);
       setIsError(true);
@@ -175,7 +176,7 @@ function BookForm() {
         {/* 버튼 텍스트 변경: book_id 유무에 따라 "수정" 또는 "등록" 표시 */}
       </form>
     </div>
-  ); // return end
-} // BookForm end
+  );
+}
 
 export default BookForm;

@@ -28,7 +28,8 @@ public class BookService {
     // 책 추천 등록 기능 (addBook 메소드)
     public int addBook(BookDto bookDto) {
         // 1. Mapper 를 호출하여 데이터베이스에 책 추천 정보 저장
-        return bookMapper.insertBook(bookDto);
+         bookMapper.insertBook(bookDto); // 책 추천 정보 저장 (나를 귀롭힌 구간!)
+         return bookDto.getBook_id(); // 책 추천번호 반환 (나를 귀롭힌 구간!)
     } // addBook end
 
     // 책 추천 수정 기능 (updateBook 메소드)

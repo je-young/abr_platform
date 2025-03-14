@@ -1,33 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+// 변경 1: useLocation 훅 추가
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './BookDetail.css';
-import { useCallback } from 'react';
 
 function BookDetail() {
   const { book_id } = useParams(); // URL에서 book_id 추출
+  // 변경 2: useLocation 훅 사용
+  const location = useLocation(); // 라우터에서 전달된 상태에 접근하기 위한 훅
   const [book, setBook] = useState(null); // 책 정보 state
   const [reviews, setReviews] = useState([]); // 리뷰 목록 state
   const navigate = useNavigate();
 
+  // 변경 3: useEffect 로직 수정
   useEffect(() => {
-    fetchBookDetail();
-    fetchReviews();
-  }, [book_id]);
+    console.log('BookDetail 마운트 또는 book_id 변경:', book_id);
+    console.log('라우터 상태 확인:', location.state);
+
+    // 라우터 상태에서 책 데이터가 전달되었는지 확인
+    if (location.state?.bookData) {
+      console.log('라우터 상태에서 책 데이터 사용:', location.state.bookData);
+      setBook(location.state.bookData);
+      fetchReviews(); // 리뷰는 항상 최신 데이터를 가져옴
+    } else {
+      // 상태로 전달된 데이터가 없으면 API로 책 정보 조회
+      fetchBookDetail();
+      fetchReviews();
+    }
+  }, [book_id, location]); // 변경 4: location 의존성 추가
 
   // 책 상세 정보 API 호출
-  const fetchBookDetail = useCallback(async () => {
+  // 변경 5: 디버깅 로그 추가
+  const fetchBookDetail = async () => {
     try {
+      console.log(
+        `책 상세 API 호출 시작: http://localhost:8080/book/${book_id}`
+      );
       const response = await axios.get(`http://localhost:8080/book/${book_id}`);
-      console.log('Book Detail API 응답 데이터:', response.data);
+      console.log('책 상세 API 응답:', response.data);
       setBook(response.data);
     } catch (error) {
       console.error('책 세부 정보 가져오기 오류:', error);
     }
-  }, [book_id]);
+  };
 
   // 특정 책의 리뷰 목록 API 호출
-  const fetchReviews = useCallback(async () => {
+  const fetchReviews = async () => {
     try {
       const response = await axios.get(
         `http://localhost:8080/review?book_id=${book_id}`
@@ -36,7 +54,7 @@ function BookDetail() {
     } catch (error) {
       console.error('리뷰 목록 가져오기 오류:', error);
     }
-  }, [book_id]);
+  };
 
   // 리뷰 삭제 핸들러
   const handleDeleteReview = async (review_id) => {
@@ -86,6 +104,11 @@ function BookDetail() {
   return (
     <div>
       <h1>책 추천 상세 정보</h1>
+
+      {/* 변경 6: 새로 등록된 책일 경우 메시지 표시 */}
+      {location.state?.isNewBook && (
+        <div className="success-message">새로 등록된 책입니다!</div>
+      )}
 
       {book === null ? (
         <p>Loading...</p>
